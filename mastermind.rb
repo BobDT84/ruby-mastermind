@@ -37,6 +37,8 @@ class Mastermind
   end
 
   def process_guess
+    # H - hit
+    # m - miss
     hint = []
     guess = @guess_history[@round]
     4.times do |i|
@@ -51,7 +53,9 @@ class Mastermind
 
   def print_history
     (0...@round).each do |i|
-      puts "Round#{i+1}: " + @guess_history[i].join(', ') + ' => ' + @hint_history[i].join(', ')
+      num = i + 1
+      num = " #{num}" if i < 10
+      puts "Round#{num}: " + @guess_history[i].join("\t") + "\t=>\t" + @hint_history[i].join(', ')
     end
   end
 
@@ -60,7 +64,7 @@ class Mastermind
     if @round < 12
       play_round
     else
-      game_over
+      #game_over
     end
   end
 
