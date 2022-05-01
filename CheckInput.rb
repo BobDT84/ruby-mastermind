@@ -4,10 +4,11 @@ module CheckInput
       input
     else
       puts "#{input} is not a valid color"
-      print "colors: #{colors.join(', ')}"
+      puts "Valid colors are #{colors.join(', ')}"
       return ask_and_check(prompt, :check_color, [colors])
     end
   end
+  
   def number?(subject)
     subject =~ /[0-9]/
   end
