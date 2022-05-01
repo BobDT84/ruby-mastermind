@@ -63,6 +63,7 @@ class Mastermind
       if x == 'H' || x.length == 0
         next
       else
+        # counts a miss if other guesses for the same color were not a hit
         misses +=1 if x.select{|index| accuracy[index] != 'H'}.length > 0
       end
     end
@@ -70,6 +71,9 @@ class Mastermind
   end
 
   def guess_accuracy
+    # Records hits as an 'H'
+    # Records misses as an array of the indices of the secret_code array
+    # if guess color is not in secret_code an empty array is returned
     accuracy = []
     4.times do |i|
       if @guess[i] == @secret_code[i]
