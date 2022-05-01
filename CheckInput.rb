@@ -8,13 +8,30 @@ module CheckInput
       return ask_and_check(prompt, :check_color, [colors])
     end
   end
-  
+
   def number?(subject)
     subject =~ /[0-9]/
   end
 
   def not_number?(subject)
     !number?(subject)
+  end
+
+  def call_downcase(subject)
+    subject.downcase
+  end
+
+  def check_input(input, prompt, expects, modify = false)
+    if modify
+      input = method(modify).call(input)
+    end
+    if expects.include?(input)
+      input
+    else
+      puts 'Incorrect Input'
+      return ask_and_check(prompt, :check_input, [expects, modify])
+    end
+    input
   end
 
   def ask_and_check(prompt, check, arguments = false)
