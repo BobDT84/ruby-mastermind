@@ -27,10 +27,10 @@ class Mastermind
     puts "Round #{@round + 1} of 12"
     get_player_guess
     process_guess
-    unless @secret_code == @guess_history[@round]
-      next_round
-    else
+    if @secret_code == @guess_history[@round]
       game_over('win')
+    else
+      next_round
     end
   end
 
