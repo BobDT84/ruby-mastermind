@@ -5,7 +5,7 @@ class Mastermind
   def initialize
     @colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
     @secret_code = get_secret_code
-    #@secret_code = ['orange', 'red', 'red', 'red']
+    # @secret_code = ['orange', 'red', 'red', 'red']
     @round = 0
     @guess_history = []
     @guess = []
@@ -18,7 +18,7 @@ class Mastermind
 
   def get_secret_code
     code = []
-    4.times {code.push(@colors.sample)}
+    4.times { code.push(@colors.sample) }
     code
   end
 
@@ -37,7 +37,7 @@ class Mastermind
   def get_player_guess
     guess = []
     4.times do |i|
-      guess.push(ask_and_check("Guess Color#{i+1}: ", :check_color, [@colors]))
+      guess.push(ask_and_check("Guess Color#{i + 1}: ", :check_color, [@colors]))
     end
     @guess_history.push(guess)
     @guess = guess
@@ -45,8 +45,8 @@ class Mastermind
 
   def process_guess
     hint = []
-    count_hits.times{hint.push('H')}
-    count_misses.times{hint.push('m')}
+    count_hits.times { hint.push('H') }
+    count_misses.times { hint.push('m') }
     @hint_history.push(hint)
   end
 
@@ -60,11 +60,11 @@ class Mastermind
     misses = 0
     accuracy = guess_accuracy
     accuracy.each do |x|
-      if x == 'H' || x.length == 0
+      if x == 'H' || x.length.zero?
         next
-      else
+      elsif x.reject { |index| accuracy[index] == 'H' }.length.positive?
         # counts a miss if other guesses for the same color were not a hit
-        misses +=1 if x.select{|index| accuracy[index] != 'H'}.length > 0
+        misses += 1
       end
     end
     misses
