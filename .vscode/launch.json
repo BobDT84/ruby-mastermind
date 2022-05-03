@@ -7,7 +7,7 @@
         {
             "name": "Debug Local File",
             "type": "Ruby",
-            "request": "attach",
+            "request": "launch",
             "program": "${workspaceRoot}/mastermind.rb",
             "remoteHost": "127.0.0.1",
             "remotePort": "1234",

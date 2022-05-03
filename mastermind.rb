@@ -1,37 +1,77 @@
 require_relative 'CheckInput'
+require_relative 'ComputerCodebreaker'
 
 class Mastermind 
   include CheckInput
   def initialize
-    @colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
-    @secret_code = get_secret_code
-    # @secret_code = ['orange', 'red', 'red', 'red']
+    @colors = %w[red orange yellow green blue purple]
+    @secret_code = make_secret_code
     @round = 0
+    @last_round = 12
     @guess_history = []
     @guess = []
     @hint_history = []
     test
-    play_round
+    select_role
   end
 
   private
 
-  def get_secret_code
+  def make_secret_code
     code = []
     4.times { code.push(@colors.sample) }
     code
   end
 
+  def select_role
+    # Uncomment after debugging
+    # answer = ask_and_check("Select your role:\n1. Codebreaker\n2. Codemaker\n", :check_input, [%w[1 2]])
+    answer = '2'
+    case answer
+    when '1'
+      @breaker = 'Player'
+      @maker = 'Computer'
+    when '2'
+      @breaker = 'Computer'
+      @maker =  'Player'
+      @computer = Computer.new(@colors, @last_round)
+      ask_for_code
+    end
+    play_round
+  end
+
   def play_round
     print_history unless @guess_history.empty?
-    puts "Round #{@round + 1} of 12"
-    get_player_guess
+    puts "Round #{@round + 1} of #{@last_round}"
+    case @breaker
+    when 'Player'
+      get_player_guess
+    when 'Computer'
+      get_computer_guess
+    end
     process_guess
     if @secret_code == @guess_history[@round]
-      game_over('win')
+      game_over(@breaker)
     else
       next_round
     end
+  end
+
+  def ask_for_code
+    @secret_code = []
+    puts 'Use the following colors to create your code'
+    puts 'red, orange, yellow, green, blue, purple'
+    4.times do |i|
+      # Uncomment after debugging
+      # @secret_code.push(ask_and_check("Code Color#{i + 1}: ", :check_color, [@colors]))
+      @secret_code = %w[red green blue red]
+    end
+    play_round
+  end
+
+  def get_computer_guess
+    @guess = @computer.guess(@hint_history)
+    @guess_history.push(@guess)
   end
 
   def get_player_guess
@@ -99,23 +139,18 @@ class Mastermind
 
   def next_round
     @round += 1
-    if @round < 12
+    if @round < @last_round
       play_round
     else
       puts 'Out of Rounds'
-      game_over('lost')
+      game_over(@maker)
     end
   end
 
-  def game_over(outcome)
-    if outcome == 'win'
-      puts 'You Won!'
-      ask_to_play_again
-    elsif outcome == 'lost'
-      puts 'The computer won.'
-      puts 'Better luck next time.'
-      ask_to_play_again
-    end
+  def game_over(winner)
+    print_history
+    puts "#{winner} wins!"
+    ask_to_play_again
   end
 
   def ask_to_play_again
