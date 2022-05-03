@@ -93,7 +93,7 @@ class Mastermind
     (0...@round).each do |i|
       num = i + 1
       num = " #{num}" if i < 10
-      puts "Round#{num}: " + @guess_history[i].join("\t") + "\t=>\t" + @hint_history[i].join(', ')
+      puts "Round#{num}: #{@guess_history[i].join("\t")}\t=>\t#{@hint_history[i].join(', ')}"
     end
   end
 
@@ -102,7 +102,7 @@ class Mastermind
     if @round < 12
       play_round
     else
-      puts "Out of Rounds"
+      puts 'Out of Rounds'
       game_over('lost')
     end
   end
