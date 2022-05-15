@@ -34,7 +34,7 @@ class Mastermind
     when '2'
       @breaker = 'Computer'
       @maker =  'Player'
-      @computer = Computer.new(@colors, @last_round)
+      @computer = Computer.new(@colors)
       ask_for_code
     end
     play_round
@@ -66,6 +66,7 @@ class Mastermind
       # @secret_code.push(ask_and_check("Code Color#{i + 1}: ", :check_color, [@colors]))
       @secret_code = %w[red green blue red]
     end
+    test
     play_round
   end
 
@@ -84,30 +85,7 @@ class Mastermind
   end
 
   def process_guess
-    hint = []
-    count_hits.times { hint.push('H') }
-    count_misses.times { hint.push('m') }
-    @hint_history.push(hint)
-  end
-
-  def count_hits
-    hits = 0
-    4.times {|i| hits += 1 if @guess[i] == @secret_code[i]}
-    hits
-  end
-
-  def count_misses
-    misses = 0
-    accuracy = guess_accuracy
-    accuracy.each do |x|
-      if x == 'H' || x.length.zero?
-        next
-      elsif x.reject { |index| accuracy[index] == 'H' }.length.positive?
-        # counts a miss if other guesses for the same color were not a hit
-        misses += 1
-      end
-    end
-    misses
+    @hint_history.push(guess_accuracy)
   end
 
   def guess_accuracy
@@ -115,11 +93,14 @@ class Mastermind
     # Records misses as an array of the indices of the secret_code array
     # if guess color is not in secret_code an empty array is returned
     accuracy = []
-    4.times do |i|
-      if @guess[i] == @secret_code[i]
+    guess = @guess.clone
+    @secret_code.each_with_index do |color, index|
+      if color == @guess[index]
         accuracy.push('H')
-      else
-        accuracy.push(indices(@secret_code,@guess[i]))
+        guess.pop(index)
+      elsif guess.any?(color)
+        guess.delete(color)
+        accuracy.push('m')
       end
     end
     accuracy
@@ -150,6 +131,7 @@ class Mastermind
   def game_over(winner)
     print_history
     puts "#{winner} wins!"
+    puts @guess
     ask_to_play_again
   end
 
