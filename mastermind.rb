@@ -11,7 +11,6 @@ class Mastermind
     @guess_history = []
     @guess = []
     @hint_history = []
-    test
     select_role
   end
 
@@ -24,9 +23,7 @@ class Mastermind
   end
 
   def select_role
-    # Uncomment after debugging
-    # answer = ask_and_check("Select your role:\n1. Codebreaker\n2. Codemaker\n", :check_input, [%w[1 2]])
-    answer = '2'
+    answer = ask_and_check("Select your role:\n1. Codebreaker\n2. Codemaker\n", :check_input, [%w[1 2]])
     case answer
     when '1'
       @breaker = 'Player'
@@ -62,11 +59,8 @@ class Mastermind
     puts 'Use the following colors to create your code'
     puts 'red, orange, yellow, green, blue, purple'
     4.times do |i|
-      # Uncomment after debugging
-      # @secret_code.push(ask_and_check("Code Color#{i + 1}: ", :check_color, [@colors]))
-      @secret_code = %w[red green blue red]
+      @secret_code.push(ask_and_check("Code Color#{i + 1}: ", :check_color, [@colors]))
     end
-    test
     play_round
   end
 
@@ -129,9 +123,10 @@ class Mastermind
   end
 
   def game_over(winner)
+    @round += 1
     print_history
+    puts "The secret code was #{@secret_code.join(', ')}"
     puts "#{winner} wins!"
-    puts @guess
     ask_to_play_again
   end
 
@@ -140,11 +135,8 @@ class Mastermind
     if answer == 'y'
       Mastermind.new
     else
+      exit(true)
     end
-  end
-
-  def test
-    p "Secret Code: #{@secret_code}"
   end
 end
 

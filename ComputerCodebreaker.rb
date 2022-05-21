@@ -21,7 +21,6 @@ class Computer
     end
     guess = generate_guess
     @guess_history.push(guess)
-    breakpoint if @round == 11
     guess[0]
   end
 
